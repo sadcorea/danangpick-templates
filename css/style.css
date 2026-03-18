@@ -1,7 +1,5 @@
 /* ===== DanangPick 브랜드 디자인 — 블랙 골드 럭셔리 ===== */
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
-
 :root {
   --gold:          #C9A24A;
   --gold-light:    #F0D77B;
@@ -184,11 +182,14 @@ body {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 16px 16px 13px;
+  padding: 16px;
   margin-bottom: 10px;
   position: relative;
   overflow: hidden;
   transition: border-color 0.25s, box-shadow 0.25s;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
 }
 
 .template-card::before {
@@ -208,42 +209,47 @@ body {
 
 .template-card:hover::before { opacity: 1; }
 
+.card-body {
+  flex: 1;
+  min-width: 0;
+}
+
 .template-title {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--text);
-  margin-bottom: 7px;
+  margin-bottom: 8px;
   letter-spacing: 0.01em;
 }
 
 .template-preview {
   font-size: 12px;
   color: var(--text-muted);
-  line-height: 1.65;
-  margin-bottom: 13px;
+  line-height: 1.7;
   white-space: pre-line;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
-/* ── 복사 버튼 ────────────────────────────── */
+/* ── 복사 버튼 — 우측 정사각형 ────────────── */
 .copy-btn {
-  width: 100%;
-  padding: 11px;
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
   background: transparent;
   border: 1px solid rgba(201,162,74,0.35);
-  border-radius: 7px;
+  border-radius: 10px;
   font-family: 'Noto Sans KR', sans-serif;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   color: var(--gold);
   cursor: pointer;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.04em;
   position: relative;
   overflow: hidden;
-  transition: color 0.2s, border-color 0.2s;
+  transition: border-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
 }
 
 .copy-btn::before {
@@ -258,9 +264,11 @@ body {
 .copy-btn .btn-text {
   position: relative;
   z-index: 1;
+  line-height: 1.2;
+  text-align: center;
 }
 
-.copy-btn:active { transform: scale(0.97); }
+.copy-btn:active { transform: scale(0.94); }
 
 .copy-btn:hover { border-color: var(--gold); }
 .copy-btn:hover::before { opacity: 1; }

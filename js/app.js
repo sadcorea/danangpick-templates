@@ -63,6 +63,10 @@ function renderContent(category) {
       var card = document.createElement('div');
       card.className = 'template-card';
 
+      // 텍스트 영역 (좌측)
+      var body = document.createElement('div');
+      body.className = 'card-body';
+
       var title = document.createElement('div');
       title.className = 'template-title';
       title.textContent = template.title;
@@ -71,6 +75,10 @@ function renderContent(category) {
       preview.className = 'template-preview';
       preview.textContent = template.text;
 
+      body.appendChild(title);
+      body.appendChild(preview);
+
+      // 복사 버튼 (우측 정사각형)
       var copyBtn = document.createElement('button');
       copyBtn.className = 'copy-btn';
       var btnSpan = document.createElement('span');
@@ -81,8 +89,7 @@ function renderContent(category) {
         copyText(copyBtn, template.text);
       });
 
-      card.appendChild(title);
-      card.appendChild(preview);
+      card.appendChild(body);
       card.appendChild(copyBtn);
       situationDiv.appendChild(card);
     });
