@@ -73,7 +73,10 @@ function renderContent(category) {
 
       var copyBtn = document.createElement('button');
       copyBtn.className = 'copy-btn';
-      copyBtn.textContent = '복사';
+      var btnSpan = document.createElement('span');
+      btnSpan.className = 'btn-text';
+      btnSpan.textContent = '복사';
+      copyBtn.appendChild(btnSpan);
       copyBtn.addEventListener('click', function () {
         copyText(copyBtn, template.text);
       });
@@ -123,11 +126,14 @@ function fallbackCopy(btn, text) {
 }
 
 function flashCopied(btn) {
-  var original = btn.textContent;
-  btn.textContent = '복사됨 ✓';
+  var span = btn.querySelector('.btn-text');
+  var original = span ? span.textContent : btn.textContent;
+  if (span) span.textContent = '복사됨 ✓';
+  else btn.textContent = '복사됨 ✓';
   btn.classList.add('copied');
   setTimeout(function () {
-    btn.textContent = original;
+    if (span) span.textContent = original;
+    else btn.textContent = original;
     btn.classList.remove('copied');
   }, 1500);
 }
