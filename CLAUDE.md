@@ -4,7 +4,7 @@
 
 다낭픽 고객 응대 템플릿 도구입니다. 카카오톡 등 메신저 응대 시 자주 쓰는 메시지를 카테고리별로 모아 두고, 버튼 한 번으로 클립보드에 복사할 수 있도록 만든 모바일 전용 정적 웹앱입니다. 빌드 도구 없이 HTML/CSS/JS 파일만으로 구성되며, GitHub Pages로 배포됩니다.
 
-**접속 URL:** https://sadcorea.github.io/DanangPick/
+**접속 URL:** https://sadcorea.github.io/danangpick-templates/
 
 ---
 
@@ -31,7 +31,7 @@
 
 | 항목 | 값 |
 |------|-----|
-| 저장소 | sadcorea/DanangPick |
+| 저장소 | sadcorea/danangpick-templates (Public) |
 | 배포 브랜치 | gh-pages |
 | 로컬 경로 | `C:\1. 다낭픽 관련\고객응대\` |
 
@@ -39,6 +39,12 @@
 ```
 git add . && git commit -m "변경 내용 설명" && git push origin gh-pages
 ```
+
+**⚠️ GitHub Pages 최초 활성화는 브라우저에서 수동으로:**
+1. https://github.com/sadcorea/danangpick-templates/settings/pages 접속
+2. Branch → `gh-pages` / `/ (root)` 선택 → Save
+3. 이유: GitHub CLI 토큰에 Pages API 권한 없음 (pages:write 스코프 미포함)
+   → 재발급 필요 시 GitHub Settings → Developer settings → Fine-grained tokens
 
 ---
 
