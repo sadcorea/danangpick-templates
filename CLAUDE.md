@@ -89,6 +89,9 @@ git add . && git commit -m "변경 내용 설명" && git push origin gh-pages
 
 ## Claude 작업 원칙
 
+- **⚠️ 작업 저장소: `sadcorea/danangpick-templates` 만 사용**
+  - `sadcorea/DanangPick` (블로그 자동발행용 별도 저장소) 에는 절대 커밋·푸시 금지
+  - 로컬 경로 `C:\1. 다낭픽 관련\고객응대\` 에서만 git 작업할 것
 - 카테고리는 파일 하나에 하나 (`js/templates/이름.js`)
 - 스타일 변경은 `css/style.css` 에서만
 - 로직 변경은 `js/app.js` 에서만
