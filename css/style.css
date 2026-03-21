@@ -223,7 +223,7 @@ body {
 }
 
 .template-preview {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text);
   line-height: 1.7;
   white-space: pre-line;
