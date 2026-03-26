@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>다낭픽 업체관리</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ── 업체관리 전용 스타일 ── */
+
+    .nav-link {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 11px;
+      color: var(--gold);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: border-color 0.2s;
+    }
+    .nav-link:hover { border-color: var(--gold); }
+
+    .header { position: relative; justify-content: center; }
+
+    /* 탭바 (3개 탭 — 균등 분배) */
+    .vendor-tabs {
+      position: sticky;
+      top: 62px;
+      z-index: 99;
+      background: rgba(12,12,12,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+    }
+    .vendor-tabs .tab-btn { flex: 1; text-align: center; }
+
+    /* 패널 */
+    .panel { display: none; padding: 20px 14px 48px; max-width: 640px; margin: 0 auto; }
+    .panel.active { display: block; }
+
+    /* 폼 */
+    .form-group { margin-bottom: 16px; }
+    .form-label {
+      display: block;
+      font-size: 11px;
+      color: var(--gold-dark);
+      letter-spacing: 0.1em;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 14px;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--gold);
+    }
+    .form-select { appearance: none; cursor: pointer; }
+    .form-textarea { resize: vertical; min-height: 60px; }
+    .form-row { display: flex; gap: 10px; }
+    .form-row .form-group { flex: 1; }
+
+    /* 토글 */
+    .toggle-wrap { display: flex; align-items: center; gap: 10px; }
+    .toggle {
+      width: 44px; height: 24px;
+      background: #333;
+      border-radius: 12px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .toggle.on { background: var(--gold-dark); }
+    .toggle::after {
+      content: '';
+      width: 20px; height: 20px;
+      background: #fff;
+      border-radius: 50%;
+      position: absolute;
+      top: 2px; left: 2px;
+      transition: left 0.2s;
+    }
+    .toggle.on::after { left: 22px; }
+    .toggle-text { font-size: 13px; color: var(--text-muted); }
+
+    /* 메뉴 추가 섹션 */
+    .menu-section {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 20px;
+    }
+    .menu-section-title {
+      font-size: 12px;
+      color: var(--gold);
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: 0.08em;
+    }
+    .menu-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+      align-items: center;
+    }
+    .menu-row .form-input { padding: 10px; font-size: 13px; }
+    .menu-row .menu-name { flex: 2; }
+    .menu-row .menu-cost { flex: 1; }
+    .menu-row .menu-sell { flex: 1; }
+    .menu-row .menu-group { flex: 1; }
+    .menu-del {
+      width: 32px; height: 32px;
+      background: none;
+      border: 1px solid rgba(255,80,80,0.3);
+      border-radius: 6px;
+      color: #ff5050;
+      font-size: 16px;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .menu-del:hover { border-color: #ff5050; background: rgba(255,80,80,0.1); }
+
+    .add-menu-btn, .form-submit-btn, .export-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .add-menu-btn {
+      background: none;
+      border: 1px dashed var(--border);
+      color: var(--gold);
+      width: 100%;
+      margin-top: 8px;
+    }
+    .add-menu-btn:hover { border-color: var(--gold); }
+    .form-submit-btn {
+      background: var(--gold-grad);
+      border: none;
+      color: #111;
+      font-weight: 700;
+      width: 100%;
+      margin-top: 20px;
+      padding: 14px;
+      font-size: 15px;
+    }
+    .form-submit-btn:active { transform: scale(0.97); }
+    .export-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 12px;
+      padding: 8px 14px;
+    }
+    .export-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* 업체 카드 리스트 */
+    .filter-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+      scrollbar-width: none;
+    }
+    .filter-bar::-webkit-scrollbar { display: none; }
+    .filter-chip {
+      flex-shrink: 0;
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: none;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-family: 'Noto Sans KR', sans-serif;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .filter-chip.active {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(201,162,74,0.08);
+    }
+
+    .vendor-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .vendor-card:hover { border-color: var(--border-hover); }
+    .vendor-card-header {
+      padding: 14px 16px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .vendor-card-name {
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .vendor-card-category {
+      font-size: 11px;
+      color: var(--gold-dark);
+      padding: 3px 8px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .vendor-card-body {
+      display: none;
+      padding: 0 16px 16px;
+      border-top: 1px solid var(--border);
+    }
+    .vendor-card.open .vendor-card-body { display: block; }
+
+    .vendor-info-row {
+      display: flex;
+      padding: 6px 0;
+      font-size: 13px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .vendor-info-label {
+      width: 90px;
+      flex-shrink: 0;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+    .vendor-info-value { flex: 1; color: var(--text); word-break: break-all; }
+
+    .vendor-menu-table { width: 100%; margin-top: 12px; }
+    .vendor-menu-table th {
+      font-size: 11px;
+      color: var(--gold-dark);
+      text-align: left;
+      padding: 6px 4px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 500;
+    }
+    .vendor-menu-table td {
+      font-size: 13px;
+      padding: 8px 4px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .vendor-menu-group {
+      font-size: 11px;
+      color: var(--gold);
+      padding: 8px 4px 4px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+    }
+
+    .copy-menu-btn {
+      padding: 6px 12px;
+      background: none;
+      border: 1px solid rgba(201,162,74,0.35);
+      border-radius: 6px;
+      color: var(--gold);
+      font-size: 11px;
+      font-family: 'Noto Sans KR', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .copy-menu-btn:hover { border-color: var(--gold); }
+    .copy-menu-btn.copied { background: var(--gold-dark); color: #111; }
+
+    .copy-all-wrap {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    /* 내부 정보 접기 */
+    .internal-toggle {
+      font-size: 11px;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .internal-toggle:hover { color: var(--gold); }
+    .internal-section { display: none; }
+    .internal-section.open { display: block; }
+
+    /* 견적 생성기 */
+    .quote-preview {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 16px;
+      white-space: pre-line;
+      font-size: 14px;
+      line-height: 1.7;
+      min-height: 100px;
+      color: var(--text);
+    }
+    .quote-total {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--gold-light);
+      margin-top: 12px;
+      text-align: right;
+    }
+    .menu-check-list { margin-top: 12px; }
+    .menu-check-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .menu-check-item input[type="checkbox"] {
+      width: 20px; height: 20px;
+      accent-color: var(--gold);
+    }
+    .menu-check-name { flex: 1; font-size: 14px; }
+    .menu-check-price { font-size: 14px; color: var(--gold-light); font-weight: 500; }
+    .menu-check-qty {
+      width: 50px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 14px;
+      text-align: center;
+      padding: 6px;
+    }
+
+    .section-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 20px 0;
+    }
+
+    .btn-group { display: flex; gap: 8px; margin-top: 12px; }
+
+    /* 토스트 */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--gold-dark);
+      color: #111;
+      font-weight: 700;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      z-index: 999;
+      opacity: 0;
+      transition: all 0.3s;
+      pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    /* 편집/삭제 버튼 */
+    .vendor-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .vendor-actions button {
+      flex: 1;
+      padding: 10px;
+      border-radius: 6px;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-edit {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--gold);
+    }
+    .btn-edit:hover { border-color: var(--gold); }
+    .btn-delete {
+      background: none;
+      border: 1px solid rgba(255,80,80,0.3);
+      color: #ff5050;
+    }
+    .btn-delete:hover { border-color: #ff5050; }
+
+    /* 검색 */
+    .search-wrap {
+      margin-bottom: 12px;
+    }
+    .search-input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 14px;
+      padding: 12px 14px;
+      outline: none;
+    }
+    .search-input:focus { border-color: var(--gold); }
+    .search-input::placeholder { color: var(--text-muted); }
+
+    /* 업체 수 배지 */
+    .vendor-count {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+    .vendor-count strong { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <a href="index.html" class="nav-link">← 응대</a>
+    <div class="header-brand">
+      <div class="header-logo">DanangPick</div>
+      <div class="header-sub">Vendor Management</div>
+    </div>
+  </div>
+
+  <div class="vendor-tabs">
+    <button class="tab-btn active" data-tab="register">업체 등록</button>
+    <button class="tab-btn" data-tab="list">업체 목록</button>
+    <button class="tab-btn" data-tab="quote">견적 생성</button>
+  </div>
+
+  <!-- ━━ 탭1: 업체 등록 ━━ -->
+  <div id="panel-register" class="panel active">
+    <form id="vendor-form" autocomplete="off">
+      <!-- 기본 정보 -->
+      <div class="form-group">
+        <label class="form-label">업체ID (자동)</label>
+        <input type="text" id="f-id" class="form-input" readonly>
+      </div>
+      <div class="form-group">
+        <label class="form-label">업체명 *</label>
+        <input type="text" id="f-name" class="form-input" placeholder="예: 판도라 라운지" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">카테고리 *</label>
+        <select id="f-category" class="form-select" required>
+          <option value="">선택</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">연락처 (카톡)</label>
+          <input type="text" id="f-kakao" class="form-input" placeholder="카톡 ID 또는 링크">
+        </div>
+        <div class="form-group">
+          <label class="form-label">연락처 (전화)</label>
+          <input type="tel" id="f-phone" class="form-input" placeholder="0905 123 456">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">영업시간</label>
+          <input type="text" id="f-hours" class="form-input" placeholder="19:00~03:00">
+        </div>
+        <div class="form-group">
+          <label class="form-label">예약가능시간</label>
+          <input type="text" id="f-booking-hours" class="form-input" placeholder="18:00~02:00">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">위치/주소</label>
+        <input type="text" id="f-address" class="form-input" placeholder="주소 입력">
+      </div>
+      <div class="form-group">
+        <label class="form-label">구글맵 링크</label>
+        <input type="url" id="f-map" class="form-input" placeholder="https://maps.app.goo.gl/...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">기본가격대</label>
+        <input type="text" id="f-price-range" class="form-input" placeholder="800000~1000000">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">소개비율 (%)</label>
+          <input type="number" id="f-commission" class="form-input" placeholder="10" min="0" max="100">
+        </div>
+        <div class="form-group">
+          <label class="form-label">최대수용인원</label>
+          <input type="number" id="f-capacity" class="form-input" placeholder="0" min="0">
+        </div>
+      </div>
+
+      <!-- 정산 -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">정산계좌 은행</label>
+          <input type="text" id="f-bank" class="form-input" placeholder="신한은행">
+        </div>
+        <div class="form-group">
+          <label class="form-label">예금주</label>
+          <input type="text" id="f-holder" class="form-input" placeholder="홍길동">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">정산계좌 번호</label>
+        <input type="text" id="f-account" class="form-input" placeholder="110-123-456789">
+      </div>
+
+      <!-- 그랩 -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">그랩 제공</label>
+          <div class="toggle-wrap">
+            <div id="f-grab" class="toggle"></div>
+            <span class="toggle-text">아니오</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">그랩 비용</label>
+          <input type="text" id="f-grab-cost" class="form-input" placeholder="VND">
+        </div>
+      </div>
+
+      <!-- 상태 -->
+      <div class="form-group">
+        <label class="form-label">상태</label>
+        <select id="f-status" class="form-select">
+          <option value="운영중">운영중</option>
+          <option value="중지">중지</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">특이사항</label>
+        <textarea id="f-notes" class="form-textarea" placeholder="메모"></textarea>
+      </div>
+
+      <!-- 메뉴 섹션 -->
+      <div class="menu-section">
+        <div class="menu-section-title">📋 메뉴 / 서비스</div>
+        <div class="menu-row" style="margin-bottom:4px;">
+          <span class="menu-name" style="font-size:10px;color:var(--text-muted)">메뉴명</span>
+          <span class="menu-cost" style="font-size:10px;color:var(--text-muted)">원가</span>
+          <span class="menu-sell" style="font-size:10px;color:var(--text-muted)">판매가</span>
+          <span class="menu-group" style="font-size:10px;color:var(--text-muted)">그룹</span>
+          <span style="width:32px"></span>
+        </div>
+        <div id="menu-rows"></div>
+        <button type="button" class="add-menu-btn" id="add-menu-btn">+ 메뉴 추가</button>
+      </div>
+
+      <button type="submit" class="form-submit-btn" id="submit-btn">업체 저장</button>
+    </form>
+
+    <div class="btn-group" style="margin-top:12px;">
+      <button class="export-btn" id="export-btn">📥 JSON 내보내기</button>
+      <label class="export-btn" style="cursor:pointer;">
+        📤 JSON 불러오기
+        <input type="file" id="import-file" accept=".json" style="display:none;">
+      </label>
+      <button class="export-btn" id="reset-form-btn">🔄 폼 초기화</button>
+    </div>
+  </div>
+
+  <!-- ━━ 탭2: 업체 목록 ━━ -->
+  <div id="panel-list" class="panel">
+    <div class="search-wrap">
+      <input type="text" class="search-input" id="vendor-search" placeholder="🔍 업체명 검색...">
+    </div>
+    <div id="filter-bar" class="filter-bar"></div>
+    <div class="vendor-count" id="vendor-count"></div>
+    <div id="vendor-list"></div>
+  </div>
+
+  <!-- ━━ 탭3: 견적 생성기 ━━ -->
+  <div id="panel-quote" class="panel">
+    <div class="form-group">
+      <label class="form-label">업체 선택</label>
+      <select id="q-vendor" class="form-select">
+        <option value="">업체를 선택하세요</option>
+      </select>
+    </div>
+
+    <div id="q-menu-list" class="menu-check-list"></div>
+
+    <div class="quote-total" id="q-total" style="display:none;">
+      💰 합계: <span id="q-total-amount">0</span>
+    </div>
+
+    <div class="quote-preview" id="q-preview" style="display:none;"></div>
+
+    <button type="button" class="form-submit-btn" id="q-copy-btn" style="display:none;">📋 카톡 복사</button>
+  </div>
+
+  <!-- 토스트 -->
+  <div class="toast" id="toast"></div>
+
+  <script src="js/vendor-data.js"></script>
+  <script src="js/vendor-app.js"></script>
+</body>
+</html>
