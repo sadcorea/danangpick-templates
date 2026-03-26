@@ -5,6 +5,8 @@
 (function () {
   'use strict';
 
+  var BOOKING_API_URL = 'https://script.google.com/macros/s/AKfycbyhL4GlFm3WXEhCYB9T3-DH9fri5edWCIt-i-hopkQck0s7ni08k8Jg-WJBGKm7ljNlUA/exec';
+
   var vendors = loadVendors();
   var editingId = null; // 편집 모드 시 업체 ID
 
@@ -14,6 +16,7 @@
     initRegisterForm();
     initListPanel();
     initQuotePanel();
+    initBookingPanel();
 
     // 구글시트에서 최신 데이터 가져오기
     loadVendorsFromSheet(function (err, data) {
@@ -50,6 +53,7 @@
         // 탭 전환 시 데이터 갱신
         if (tabId === 'list') renderVendorList();
         if (tabId === 'quote') refreshQuoteVendorSelect();
+        if (tabId === 'booking') refreshBookingCategories();
       });
     });
   }
@@ -594,11 +598,13 @@
     var totalEl = document.getElementById('q-total');
     var previewEl = document.getElementById('q-preview');
     var copyBtn = document.getElementById('q-copy-btn');
+    var bookingBtn = document.getElementById('q-booking-btn');
 
     if (selected.length === 0) {
       totalEl.style.display = 'none';
       previewEl.style.display = 'none';
       copyBtn.style.display = 'none';
+      if (bookingBtn) bookingBtn.style.display = 'none';
       return;
     }
 
@@ -621,6 +627,231 @@
     previewEl.textContent = lines.join('\n');
     previewEl.style.display = 'block';
     copyBtn.style.display = 'block';
+    if (bookingBtn) bookingBtn.style.display = 'block';
+  }
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 탭4: 예약 등록
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  function initBookingPanel() {
+    // 카테고리 변경 → 업체 목록 갱신
+    document.getElementById('b-category').addEventListener('change', function () {
+      loadBookingPartners(this.value);
+    });
+
+    // 예약 등록 버튼
+    document.getElementById('b-submit-btn').addEventListener('click', function () {
+      submitBooking();
+    });
+
+    // 모달 닫기
+    document.getElementById('bm-close-btn').addEventListener('click', function () {
+      document.getElementById('bookingModal').classList.remove('active');
+    });
+
+    // 모달 메시지 복사
+    document.getElementById('bm-copy-btn').addEventListener('click', function () {
+      var msg = document.getElementById('bm-message').textContent;
+      copyToClipboard(msg, this);
+    });
+
+    // 카톡 버튼
+    document.getElementById('bm-kakao-btn').addEventListener('click', function () {
+      var url = this.getAttribute('data-kakao');
+      if (url) window.open(url, '_blank');
+    });
+
+    // 견적→예약 전환 버튼
+    document.getElementById('q-booking-btn').addEventListener('click', function () {
+      transferQuoteToBooking();
+    });
+
+    // 날짜 기본값: 오늘
+    var today = new Date();
+    var yyyy = today.getFullYear();
+    var mm = String(today.getMonth() + 1).padStart(2, '0');
+    var dd = String(today.getDate()).padStart(2, '0');
+    document.getElementById('b-date').value = yyyy + '-' + mm + '-' + dd;
+
+    // 기본 탭이므로 카테고리 즉시 로드
+    refreshBookingCategories();
+  }
+
+  function refreshBookingCategories() {
+    var select = document.getElementById('b-category');
+    var currentVal = select.value;
+    select.innerHTML = '<option value="">선택하세요</option>';
+    VENDOR_CATEGORIES.forEach(function (cat) {
+      var opt = document.createElement('option');
+      opt.value = cat;
+      opt.textContent = cat;
+      select.appendChild(opt);
+    });
+    if (currentVal) select.value = currentVal;
+  }
+
+  function loadBookingPartners(category) {
+    var select = document.getElementById('b-partner');
+    select.innerHTML = '<option value="">선택하세요</option>';
+    if (!category) return;
+
+    Object.keys(vendors).forEach(function (id) {
+      var v = vendors[id];
+      if (v.category === category && v.status !== '중지') {
+        var opt = document.createElement('option');
+        opt.value = v.name;
+        opt.setAttribute('data-id', id);
+        opt.textContent = v.name;
+        select.appendChild(opt);
+      }
+    });
+  }
+
+  // 견적 → 예약 전환
+  function transferQuoteToBooking() {
+    var vendorId = document.getElementById('q-vendor').value;
+    if (!vendorId || !vendors[vendorId]) {
+      showToast('업체를 먼저 선택하세요');
+      return;
+    }
+
+    var v = vendors[vendorId];
+
+    // 선택된 메뉴 수집
+    var items = document.querySelectorAll('#q-menu-list .menu-check-item');
+    var productParts = [];
+    items.forEach(function (item) {
+      var cb = item.querySelector('input[type="checkbox"]');
+      if (!cb.checked) return;
+      var idx = parseInt(cb.getAttribute('data-idx'));
+      var qty = parseInt(item.querySelector('.menu-check-qty').value) || 1;
+      var m = v.menus[idx];
+      productParts.push(m.name + (qty > 1 ? ' x' + qty : ''));
+    });
+
+    if (productParts.length === 0) {
+      showToast('메뉴를 선택하세요');
+      return;
+    }
+
+    // 예약 탭으로 전환
+    document.querySelectorAll('.vendor-tabs .tab-btn').forEach(function (t) { t.classList.remove('active'); });
+    document.querySelector('[data-tab="booking"]').classList.add('active');
+    document.querySelectorAll('.panel').forEach(function (p) { p.classList.remove('active'); });
+    document.getElementById('panel-booking').classList.add('active');
+
+    // 카테고리·업체 채우기
+    refreshBookingCategories();
+    document.getElementById('b-category').value = v.category;
+    loadBookingPartners(v.category);
+
+    // 약간의 딜레이 후 업체 선택 (DOM 갱신 대기)
+    setTimeout(function () {
+      document.getElementById('b-partner').value = v.name;
+    }, 50);
+
+    // 상품명 채우기
+    document.getElementById('b-product').value = productParts.join(', ');
+
+    // 상품 태그 표시
+    var tagsEl = document.getElementById('b-product-tags');
+    tagsEl.innerHTML = '';
+    productParts.forEach(function (p) {
+      var tag = document.createElement('span');
+      tag.className = 'booking-product-tag';
+      tag.textContent = p;
+      tagsEl.appendChild(tag);
+    });
+
+    showToast('📅 견적 → 예약 전환됨');
+    window.scrollTo(0, 0);
+  }
+
+  // 예약 등록 API 호출
+  function submitBooking() {
+    var category = document.getElementById('b-category').value;
+    var partner = document.getElementById('b-partner').value;
+    var product = document.getElementById('b-product').value.trim();
+    var bookingDate = document.getElementById('b-date').value;
+    var bookingTime = document.getElementById('b-time').value;
+    var persons = document.getElementById('b-persons').value;
+    var grab = document.querySelector('input[name="b-grab"]:checked').value;
+    var customerName = document.getElementById('b-customer').value.trim();
+    var phone = document.getElementById('b-phone').value.trim();
+    var request = document.getElementById('b-request').value.trim();
+
+    // 필수값 체크
+    if (!category) { showToast('❌ 카테고리를 선택하세요'); return; }
+    if (!partner) { showToast('❌ 업체를 선택하세요'); return; }
+    if (!product) { showToast('❌ 상품명을 입력하세요'); return; }
+    if (!bookingDate) { showToast('❌ 예약일을 선택하세요'); return; }
+    if (!bookingTime) { showToast('❌ 예약시간을 선택하세요'); return; }
+
+    var data = {
+      category: category,
+      partner: partner,
+      product: product,
+      bookingDate: bookingDate,
+      bookingTime: bookingTime,
+      persons: persons || '1',
+      grab: grab,
+      customerName: customerName,
+      phone: phone,
+      request: request
+    };
+
+    var btn = document.getElementById('b-submit-btn');
+    btn.disabled = true;
+    btn.textContent = '등록 중...';
+
+    var url = BOOKING_API_URL + '?action=saveBooking&data=' + encodeURIComponent(JSON.stringify(data));
+
+    fetch(url)
+      .then(function (res) { return res.json(); })
+      .then(function (result) {
+        btn.disabled = false;
+        btn.textContent = '📅 예약 등록';
+
+        if (!result || !result.success) {
+          showToast('❌ 예약 실패: ' + (result ? result.error : '알 수 없는 오류'));
+          return;
+        }
+
+        // 성공 모달 표시
+        document.getElementById('bm-number').textContent = result.bookingNumber;
+        document.getElementById('bm-partner').textContent = result.partnerName || partner;
+        document.getElementById('bm-message').textContent = result.message || '';
+
+        // 카톡 버튼
+        var kakaoBtn = document.getElementById('bm-kakao-btn');
+        if (result.kakaoInfo) {
+          var kakaoUrl = result.kakaoInfo;
+          if (kakaoUrl.startsWith('@')) kakaoUrl = 'https://open.kakao.com/me/' + kakaoUrl;
+          if (kakaoUrl.startsWith('https://')) {
+            kakaoBtn.setAttribute('data-kakao', kakaoUrl);
+            kakaoBtn.style.display = 'flex';
+          } else {
+            kakaoBtn.style.display = 'none';
+          }
+        } else {
+          kakaoBtn.style.display = 'none';
+        }
+
+        document.getElementById('bookingModal').classList.add('active');
+
+        // 폼 초기화
+        document.getElementById('b-product').value = '';
+        document.getElementById('b-product-tags').innerHTML = '';
+        document.getElementById('b-customer').value = '';
+        document.getElementById('b-phone').value = '';
+        document.getElementById('b-request').value = '';
+        document.getElementById('b-persons').value = '1';
+      })
+      .catch(function (err) {
+        btn.disabled = false;
+        btn.textContent = '📅 예약 등록';
+        showToast('❌ 네트워크 오류: ' + err.message);
+      });
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
