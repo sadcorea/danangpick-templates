@@ -13,27 +13,12 @@
   <style>
     /* ── 업체관리 전용 스타일 ── */
 
-    .nav-link {
-      position: absolute;
-      left: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 11px;
-      color: var(--gold);
-      text-decoration: none;
-      border: 1px solid var(--border);
-      padding: 6px 10px;
-      border-radius: 6px;
-      transition: border-color 0.2s;
-    }
-    .nav-link:hover { border-color: var(--gold); }
-
-    .header { position: relative; justify-content: center; }
+    .header { justify-content: center; }
 
     /* 탭바 (4개 탭 — 균등 분배) */
     .vendor-tabs {
       position: sticky;
-      top: 62px;
+      top: 104px;
       z-index: 99;
       background: rgba(12,12,12,0.96);
       backdrop-filter: blur(10px);
@@ -589,12 +574,17 @@
 <body>
 
   <div class="header">
-    <a href="index.html" class="nav-link">← 응대</a>
     <div class="header-brand">
       <div class="header-logo">DanangPick</div>
       <div class="header-sub">Vendor Management</div>
     </div>
   </div>
+
+  <nav class="page-nav">
+    <a href="index.html" class="page-nav-btn">고객응대</a>
+    <a href="%EC%97%85%EC%B2%B4%EA%B4%80%EB%A6%AC.html" class="page-nav-btn active">업체관리</a>
+    <a href="https://script.google.com/macros/s/AKfycbyhL4GlFm3WXEhCYB9T3-DH9fri5edWCIt-i-hopkQck0s7ni08k8Jg-WJBGKm7ljNlUA/exec" class="page-nav-btn" target="_blank">예약관리</a>
+  </nav>
 
   <div class="vendor-tabs">
     <button class="tab-btn active" data-tab="booking">예약</button>
