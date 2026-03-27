@@ -15,7 +15,7 @@
 
     .header { justify-content: center; }
 
-    /* 탭바 (4개 탭 — 균등 분배) */
+    /* 탭바 (3개 탭 — 균등 분배) */
     .vendor-tabs {
       position: sticky;
       top: 104px;
@@ -426,149 +426,17 @@
     }
     .vendor-count strong { color: var(--gold); }
 
-    /* ── 예약 탭 전용 스타일 ── */
-    .booking-form .form-group { margin-bottom: 14px; }
-    .booking-form .form-row { display: flex; gap: 10px; }
-    .booking-form .form-row .form-group { flex: 1; }
-
-    .booking-product-tag {
-      display: inline-block;
-      background: rgba(201,162,74,0.12);
-      border: 1px solid rgba(201,162,74,0.3);
-      border-radius: 6px;
-      padding: 6px 10px;
-      font-size: 13px;
-      color: var(--gold-light);
-      margin: 0 4px 4px 0;
-    }
-
-    .booking-submit-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border: none;
-      border-radius: 8px;
-      color: #fff;
-      font-family: 'Noto Sans KR', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 16px;
-      transition: transform 0.1s;
-    }
-    .booking-submit-btn:active { transform: scale(0.97); }
-    .booking-submit-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
+    /* 견적→예약 전환 버튼 */
     .booking-transfer-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      width: 100%;
-      padding: 14px;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      width: 100%; padding: 14px;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border: none;
-      border-radius: 8px;
-      color: #fff;
-      font-family: 'Noto Sans KR', sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 8px;
-      transition: transform 0.1s;
+      border: none; border-radius: 8px; color: #fff;
+      font-family: 'Noto Sans KR', sans-serif; font-size: 14px; font-weight: 700;
+      cursor: pointer; margin-top: 8px; transition: transform 0.1s;
+      text-decoration: none;
     }
     .booking-transfer-btn:active { transform: scale(0.97); }
-
-    /* 예약 성공 모달 */
-    .booking-modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.85);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .booking-modal.active { display: flex; }
-    .booking-modal-content {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 28px 24px;
-      max-width: 420px;
-      width: 100%;
-      text-align: center;
-    }
-    .booking-modal-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: #48bb78;
-      margin-bottom: 16px;
-    }
-    .booking-modal-info {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px;
-      margin: 16px 0;
-      text-align: left;
-      font-size: 13px;
-    }
-    .booking-modal-info p { margin: 6px 0; color: var(--text-muted); }
-    .booking-modal-info strong { color: var(--text); }
-    .booking-modal-message {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px;
-      margin: 12px 0;
-      white-space: pre-wrap;
-      font-family: monospace;
-      font-size: 12px;
-      line-height: 1.6;
-      text-align: left;
-      color: var(--text);
-      max-height: 200px;
-      overflow-y: auto;
-    }
-    .booking-modal-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      font-family: 'Noto Sans KR', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 8px;
-      transition: transform 0.1s;
-    }
-    .booking-modal-btn:active { transform: scale(0.97); }
-    .booking-modal-btn.primary { background: var(--gold-grad); color: #111; }
-    .booking-modal-btn.kakao { background: #fee500; color: #000; }
-    .booking-modal-btn.secondary { background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid var(--border); }
-
-    .grab-radio-group {
-      display: flex; gap: 16px; padding-top: 4px;
-    }
-    .grab-radio-group label {
-      display: flex; align-items: center; gap: 6px;
-      font-size: 14px; color: var(--text); cursor: pointer;
-    }
-    .grab-radio-group input[type="radio"] { accent-color: var(--gold); }
   </style>
 </head>
 <body>
@@ -583,12 +451,11 @@
   <nav class="page-nav">
     <a href="index.html" class="page-nav-btn">고객응대</a>
     <a href="%EC%97%85%EC%B2%B4%EA%B4%80%EB%A6%AC.html" class="page-nav-btn active">업체관리</a>
-    <a href="https://script.google.com/macros/s/AKfycbyhL4GlFm3WXEhCYB9T3-DH9fri5edWCIt-i-hopkQck0s7ni08k8Jg-WJBGKm7ljNlUA/exec" class="page-nav-btn" target="_blank">예약관리</a>
+    <a href="%EC%98%88%EC%95%BD%EA%B4%80%EB%A6%AC.html" class="page-nav-btn">예약관리</a>
   </nav>
 
   <div class="vendor-tabs">
-    <button class="tab-btn active" data-tab="booking">예약</button>
-    <button class="tab-btn" data-tab="list">업체 목록</button>
+    <button class="tab-btn active" data-tab="list">업체 목록</button>
     <button class="tab-btn" data-tab="quote">견적 생성</button>
     <button class="tab-btn" data-tab="register">업체 등록</button>
   </div>
@@ -731,7 +598,7 @@
   </div>
 
   <!-- ━━ 탭2: 업체 목록 ━━ -->
-  <div id="panel-list" class="panel">
+  <div id="panel-list" class="panel active">
     <div class="search-wrap">
       <input type="text" class="search-input" id="vendor-search" placeholder="🔍 업체명 검색...">
     </div>
@@ -758,90 +625,7 @@
     <div class="quote-preview" id="q-preview" style="display:none;"></div>
 
     <button type="button" class="form-submit-btn" id="q-copy-btn" style="display:none;">📋 카톡 복사</button>
-    <button type="button" class="booking-transfer-btn" id="q-booking-btn" style="display:none;">📅 예약 전환</button>
-  </div>
-
-  <!-- ━━ 예약 등록 ━━ -->
-  <div id="panel-booking" class="panel active">
-    <div class="booking-form">
-      <!-- 업체 선택 (견적에서 넘어오면 자동, 직접 선택도 가능) -->
-      <div class="form-group">
-        <label class="form-label">카테고리 *</label>
-        <select id="b-category" class="form-select" required>
-          <option value="">선택하세요</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">업체명 *</label>
-        <select id="b-partner" class="form-select" required>
-          <option value="">카테고리를 먼저 선택</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">상품명/옵션 *</label>
-        <input type="text" id="b-product" class="form-input" placeholder="예: 90분 타이마사지 x2">
-      </div>
-      <div id="b-product-tags" style="margin-top:-8px;margin-bottom:12px;"></div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">예약일 *</label>
-          <input type="date" id="b-date" class="form-input" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">예약시간 *</label>
-          <input type="time" id="b-time" class="form-input" required step="1800">
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">인원 *</label>
-          <input type="number" id="b-persons" class="form-input" min="1" value="1" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">그랩 제공 *</label>
-          <div class="grab-radio-group">
-            <label><input type="radio" name="b-grab" value="예" checked> 예</label>
-            <label><input type="radio" name="b-grab" value="아니오"> 아니오</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">고객명</label>
-          <input type="text" id="b-customer" class="form-input" placeholder="선택사항">
-        </div>
-        <div class="form-group">
-          <label class="form-label">연락처</label>
-          <input type="tel" id="b-phone" class="form-input" placeholder="선택사항">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">요청사항</label>
-        <textarea id="b-request" class="form-textarea" placeholder="고객 요청사항"></textarea>
-      </div>
-
-      <button type="button" class="booking-submit-btn" id="b-submit-btn">📅 예약 등록</button>
-    </div>
-  </div>
-
-  <!-- 예약 성공 모달 -->
-  <div class="booking-modal" id="bookingModal">
-    <div class="booking-modal-content">
-      <div class="booking-modal-title">✅ 예약 등록 완료!</div>
-      <div class="booking-modal-info">
-        <p><strong>예약번호:</strong> <span id="bm-number"></span></p>
-        <p><strong>업체:</strong> <span id="bm-partner"></span></p>
-      </div>
-      <div class="booking-modal-message" id="bm-message"></div>
-      <button class="booking-modal-btn primary" id="bm-copy-btn">📋 메시지 복사</button>
-      <button class="booking-modal-btn kakao" id="bm-kakao-btn" style="display:none;">💬 업체 카톡 바로가기</button>
-      <button class="booking-modal-btn secondary" id="bm-close-btn">닫기</button>
-    </div>
+    <a class="booking-transfer-btn" id="q-booking-btn" style="display:none;" href="#">📅 예약 전환</a>
   </div>
 
   <!-- 토스트 -->
