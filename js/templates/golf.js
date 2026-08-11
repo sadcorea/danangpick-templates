@@ -110,6 +110,39 @@ CATEGORIES.push({
 도착 시 연락드리겠습니다`
         }
       ]
+    },
+    {
+      label: '업체 소개 링크',
+      templates: [
+        {
+          title: '골프장 소개 링크 (전체)',
+          text:`다낭픽 골프장 소개 페이지입니다
+
+▪️ BUNKER golf
+https://danangpick.com/%EB%AA%A9%EB%A1%9D/bunker-golf/
+
+▪️ Ba Na Hills Golf Club
+https://danangpick.com/%EB%AA%A9%EB%A1%9D/ba-na-hills-golf-club/
+
+▪️ Hoiana Shores Golf Club
+https://danangpick.com/%EB%AA%A9%EB%A1%9D/hoiana-shores-golf-club/
+
+▪️ Laguna Golf Lang Co
+https://danangpick.com/%EB%AA%A9%EB%A1%9D/laguna-golf-lang-co/
+
+▪️ Legend Da Nang Golf Resort
+https://danangpick.com/%EB%AA%A9%EB%A1%9D/legend-da-nang-golf-resort/
+
+▪️ Montgomerie Links Vietnam
+https://danangpick.com/%EB%AA%A9%EB%A1%9D/montgomerie-links-vietnam/
+
+▪️ Vinpearl Golf Nam Hoi An
+https://danangpick.com/%EB%AA%A9%EB%A1%9D/vinpearl-golf-nam-hoi-an/
+
+사진과 위치 확인하시고 편하게 문의 주세요
+예약은 다낭픽으로 도와드립니다`
+        }
+      ]
     }
   ]
 });

@@ -121,6 +121,21 @@ CATEGORIES.push({
 도착 즉시 연락드리겠습니다`
         }
       ]
+    },
+    {
+      label: '업체 소개 링크',
+      templates: [
+        {
+          title: '홈마사지 안내 링크',
+          text:`다낭픽 홈마사지 안내 페이지입니다
+
+▪️ 다낭 홈마사지 · 출장마사지
+https://danangpick.com/%EB%AA%A9%EB%A1%9D/home-massage/
+
+사진과 위치 확인하시고 편하게 문의 주세요
+예약은 다낭픽으로 도와드립니다`
+        }
+      ]
     }
   ]
 });

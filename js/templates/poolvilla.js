@@ -109,6 +109,21 @@ CATEGORIES.push({
 즐거운 숙박 되세요`
         }
       ]
+    },
+    {
+      label: '업체 소개 링크',
+      templates: [
+        {
+          title: '풀빌라 소개 링크',
+          text:`다낭픽 풀빌라 소개 페이지입니다
+
+▪️ 다낭 프라이빗 풀빌라
+https://danangpick.com/%EB%AA%A9%EB%A1%9D/danang-private-pool-villa/
+
+사진과 위치 확인하시고 편하게 문의 주세요
+예약은 다낭픽으로 도와드립니다`
+        }
+      ]
     }
   ]
 });

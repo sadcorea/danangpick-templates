@@ -102,6 +102,33 @@ CATEGORIES.push({
 특별한 날 빛나는 순간 되시길 바랍니다`
         }
       ]
+    },
+    {
+      label: '업체 소개 링크',
+      templates: [
+        {
+          title: '식당 소개 링크 (전체)',
+          text:`다낭픽 식당 소개 페이지입니다
+
+▪️ 냐고비엣 (Nhà Gỗ Việt)
+https://danangpick.com/%EB%AA%A9%EB%A1%9D/nha-go-viet/
+
+▪️ 다낭 목 해산물 식당 (Mộc Seafood)
+https://danangpick.com/%EB%AA%A9%EB%A1%9D/moc-seafood/
+
+▪️ 랑짜이 (Làng Chài)—다낭에서 해산물 한 끼
+https://danangpick.com/%EB%AA%A9%EB%A1%9D/%EB%9E%91%EC%A7%9C%EC%9D%B4-lang-chai/
+
+▪️ 벱꾸온 (Bếp Cuốn)
+https://danangpick.com/%EB%AA%A9%EB%A1%9D/bep-cuon/
+
+▪️ 복가솥밥
+https://danangpick.com/%EB%AA%A9%EB%A1%9D/bokga-sotbap/
+
+사진과 위치 확인하시고 편하게 문의 주세요
+예약은 다낭픽으로 도와드립니다`
+        }
+      ]
     }
   ]
 });

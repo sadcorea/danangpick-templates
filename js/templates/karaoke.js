@@ -308,6 +308,24 @@ https://danangpick.com/%EB%AA%A9%EB%A1%9D/the9-danang-karaoke/
 즐거운 밤 되세요`
         }
       ]
+    },
+    {
+      label: '업체 소개 링크',
+      templates: [
+        {
+          title: '가라오케 안내 링크',
+          text:`다낭픽 가라오케 안내 페이지입니다
+
+▪️ The9 (더나인) 가라오케
+https://danangpick.com/%EB%AA%A9%EB%A1%9D/the9-danang-karaoke/
+
+▪️ 다낭 가라오케
+https://danangpick.com/%EB%AA%A9%EB%A1%9D/danang-karaoke/
+
+사진과 위치 확인하시고 편하게 문의 주세요
+예약은 다낭픽으로 도와드립니다`
+        }
+      ]
     }
   ]
 });

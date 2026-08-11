@@ -188,11 +188,39 @@ Ballantine 12 3,200K
 연락처(카톡): thutkao234`
         }
       ]
-    }
+    },
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // 다음 업장 추가 시 위 닫는 } 뒤에 콤마 추가 후
     // 같은 패턴(고객 전달용 + 내 참고용)으로 추가
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    {
+      label: '업체 소개 링크',
+      templates: [
+        {
+          title: '바·클럽 소개 링크 (전체)',
+          text:`다낭픽 바·클럽 소개 페이지입니다
+
+▪️ 로마 바 라운지
+https://danangpick.com/%EB%AA%A9%EB%A1%9D/roma-bar-lounge-danang/
+
+▪️ 므엉탄 Hotel
+https://danangpick.com/%EB%AA%A9%EB%A1%9D/muong-thanh-sky-lounge/
+
+▪️ 보스 라운지 바 (Boss Lounge Bar)
+https://danangpick.com/%EB%AA%A9%EB%A1%9D/boss-lounge-bar-danang/
+
+▪️ 에스코비치 바 (Esco Beach Bar)
+https://danangpick.com/%EB%AA%A9%EB%A1%9D/%EB%8B%A4%EB%82%AD-%EC%97%90%EC%8A%A4%EC%BD%94%EB%B9%84%EC%B9%98%EB%B0%94/
+
+▪️ 판도라 라운지
+https://danangpick.com/%EB%AA%A9%EB%A1%9D/pandora-lounge-danang/
+
+사진과 위치 확인하시고 편하게 문의 주세요
+예약은 다낭픽으로 도와드립니다`
+        }
+      ]
+    }
   ]
 });
