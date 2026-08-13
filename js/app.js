@@ -60,6 +60,13 @@ function renderContent(category) {
     situationDiv.appendChild(label);
 
     situation.templates.forEach(function (template) {
+      // 위젯형 카드 (견적 계산기 등) — template.widget 이 있으면 전용 렌더러에 맡긴다.
+      // widget 이 없는 일반 템플릿은 아래 기존 경로를 그대로 탄다.
+      if (template.widget && typeof WIDGETS !== 'undefined' && WIDGETS[template.widget]) {
+        situationDiv.appendChild(WIDGETS[template.widget](template));
+        return;
+      }
+
       var card = document.createElement('div');
       card.className = 'template-card';
 
